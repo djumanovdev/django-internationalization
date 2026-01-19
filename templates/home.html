@@ -1,2 +1,23 @@
+{% load i18n %}
 
-<h1>Home Page</h1>
+<form action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    
+    <!-- This hidden input redirects the user back to the current page after language change -->
+    <input name="next" type="hidden" value="{{ request.path }}">
+    
+    <label for="language-select">{% trans "Tilni o'zgartish:" %}</label>
+    <select id="language-select" name="language" onchange="this.form.submit()">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        {% get_available_languages as AVAILABLE_LANGUAGES %}
+
+        {% for lang_code, lang_name in AVAILABLE_LANGUAGES %}
+            <option value="{{ lang_code }}" {% if lang_code == CURRENT_LANGUAGE %} selected{% endif %}>
+                {{ lang_name }}
+            </option>
+        {% endfor %}
+    </select>
+    <noscript><input type="submit" value="{% trans "Change" %}"></noscript>
+</form>
+
+{% trans "Bosh sahifa" %}
